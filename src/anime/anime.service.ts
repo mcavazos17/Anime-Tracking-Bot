@@ -75,10 +75,10 @@ export class AnimeService {
         throw new InternalServerErrorException(error);
       });
 
-    const titlesList = list.entries.map(res => res.media.title);
+    const titlesList = list.entries.map(res => res.media.title.english);
 
     const response = {
-      speech: `Your ${userStatus} list includes: ${titlesList}`,
+      speech: `Your ${userStatus} List Includes: ${titlesList}`,
       displayText: `Your ${userStatus} list includes: ${titlesList}`,
       source: `anime list`,
     };
