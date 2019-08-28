@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { AnimeService } from './anime.service';
-import { MediaListCollectionDto } from './dto/mediaListCollection.dto';
 
 @Controller('api/anime')
 export class AnimeController {
