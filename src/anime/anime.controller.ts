@@ -1,4 +1,10 @@
-import { Controller, Get, InternalServerErrorException } from '@nestjs/common';
+import {
+  Controller,
+  InternalServerErrorException,
+  Post,
+  Req,
+} from '@nestjs/common';
+import { Request } from 'express';
 import { AnimeService } from './anime.service';
 import { MediaListCollectionDto } from './dto/mediaListCollection.dto';
 
@@ -6,10 +12,10 @@ import { MediaListCollectionDto } from './dto/mediaListCollection.dto';
 export class AnimeController {
   constructor(private readonly animeService: AnimeService) {}
 
-  @Get('getList')
-  async readList(): Promise<MediaListCollectionDto> {
+  @Post('getList')
+  async readList(@Req() request: Request): Promise<object> {
     try {
-      return await this.animeService.getList();
+      return await this.animeService.getList(request);
     } catch (error) {
       throw new InternalServerErrorException(error);
     }

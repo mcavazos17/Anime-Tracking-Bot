@@ -1,10 +1,10 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { GraphQLClient } from 'graphql-request';
-import { MediaListCollectionDto } from './dto/mediaListCollection.dto';
+import { Request } from 'express';
 
 @Injectable()
 export class AnimeService {
-  async getList(): Promise<MediaListCollectionDto> {
+  async getList(request: Request): Promise<object> {
     const client = new GraphQLClient('https://graphql.anilist.co', {
       headers: {
         // tslint:disable-next-line: quotemark
@@ -20,12 +20,12 @@ export class AnimeService {
     const userID = 195857;
     const sort = 'STATUS';
     const status = {
-      CURRENT: 'current',
-      PLANNING: 'planning',
-      COMPLETED: 'completed',
-      DROPPED: 'dropped',
+      CURRENT: 'Current',
+      PLANNING: 'Planning',
+      COMPLETED: 'Completed',
+      DROPPED: 'Dropped',
     };
-    const userStatus = 'current';
+    const userStatus = request.body.parameters.AnimeStatus;
 
     const query = `{
       MediaListCollection(userId: ${userID}, type: ${type}, sort: [${sort}]){
@@ -75,10 +75,16 @@ export class AnimeService {
         throw new InternalServerErrorException(error);
       });
 
-    console.log(list.entries.map(res => res.media.title));
+    const titlesList = list.entries.map(res => res.media.title);
+
+    const response = {
+      speech: `Your ${userStatus} list includes: ${titlesList}`,
+      displayText: `Your ${userStatus} list includes: ${titlesList}`,
+      source: `anime list`,
+    };
 
     try {
-      return list;
+      return response;
     } catch (error) {
       throw new InternalServerErrorException(error);
     }
