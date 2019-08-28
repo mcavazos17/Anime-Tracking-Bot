@@ -25,7 +25,7 @@ export class AnimeService {
       COMPLETED: 'Completed',
       DROPPED: 'Dropped',
     };
-    const userStatus = request.body.parameters.AnimeStatus;
+    const userStatus = request.body.queryResult.parameters.AnimeStatus;
 
     const query = `{
       MediaListCollection(userId: ${userID}, type: ${type}, sort: [${sort}]){
@@ -78,8 +78,20 @@ export class AnimeService {
     const titlesList = list.entries.map(res => res.media.title.english);
 
     const response = {
-      speech: `Your ${userStatus} List Includes: ${titlesList}`,
-      displayText: `Your ${userStatus} list includes: ${titlesList}`,
+      fulfillmentText: `Your ${userStatus} List Includes: ${titlesList}`,
+      payload: {
+        google: {
+          richResponse: {
+            items: [
+              {
+                simpleResponse: {
+                  textToSpeech: `Your ${userStatus} list includes: ${titlesList}`,
+                },
+              },
+            ],
+          },
+        },
+      },
       source: `anime list`,
     };
 
