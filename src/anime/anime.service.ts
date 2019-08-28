@@ -25,7 +25,7 @@ export class AnimeService {
       COMPLETED: 'completed',
       DROPPED: 'dropped',
     };
-    const userStatus = status.DROPPED;
+    const userStatus = 'current';
 
     const query = `{
       MediaListCollection(userId: ${userID}, type: ${type}, sort: [${sort}]){
@@ -66,8 +66,10 @@ export class AnimeService {
           case status.DROPPED: {
             return response.MediaListCollection.lists[3];
           }
+          default: {
+            return response.MediaListCollection;
+          }
         }
-        return response.MediaListCollection.lists[0];
       })
       .catch(error => {
         throw new InternalServerErrorException(error);
